@@ -1,19 +1,13 @@
-
 "use strict";
 
-// ==========================================
-// CONFIGURACIÓN DE LA API DE GUANAPARTES
-// ==========================================
-
-// Sustituye esta dirección por la URL pública
-// de la NUEVA API publicada en Railway.
-// No agregues /api/productos ni una barra al final.
-const API_BASE_URL = "https://guanapartes-api-prueba-production-4858.up.railway.app";
+// Dirección de la API publicada en Railway.
+const API_BASE_URL =
+  "https://guanapartes-api-prueba-production-4858.up.railway.app";
 
 document.addEventListener("DOMContentLoaded", () => {
   const lista = document.getElementById("catalogo-lista");
 
-  // Este archivo solo actúa en la página del catálogo.
+  // Solo ejecuta el catálogo en la página de productos.
   if (!lista) return;
 
   const formulario = document.getElementById("catalogo-filtros");
@@ -27,9 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const indicadorPagina = document.getElementById("catalogo-pagina");
   const reintentar = document.getElementById("catalogo-reintentar");
 
+  // Presenta los valores existentes como dólares.
+  // No convierte ni modifica los precios de la base de datos.
   const formatoPrecio = new Intl.NumberFormat("es-CR", {
     style: "currency",
-    currency: "CRC",
+    currency: "USD",
+    currencyDisplay: "code",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
@@ -48,11 +45,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // FUNCIONES AUXILIARES
   // ==========================================
 
-  // Crea elementos sin interpretar datos como HTML.
   function crearElemento(etiqueta, clase, texto) {
     const elemento = document.createElement(etiqueta);
 
-    if (clase) elemento.className = clase;
+    if (clase) {
+      elemento.className = clase;
+    }
 
     if (texto !== undefined) {
       elemento.textContent = texto;
@@ -61,11 +59,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return elemento;
   }
 
+  // Agrupa cada etiqueta con su valor.
   function añadirDato(listaDatos, nombre, valor) {
-    listaDatos.append(
+    const grupo = crearElemento("div", "dato-producto");
+
+    grupo.append(
       crearElemento("dt", "", nombre),
       crearElemento("dd", "", valor)
     );
+
+    listaDatos.append(grupo);
   }
 
   // ==========================================
@@ -98,14 +101,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const precio = producto.precioPublico;
 
-    añadirDato(
-      datos,
-      "Precio de referencia",
+    const precioVisible =
       typeof precio === "number" &&
       Number.isFinite(precio) &&
       precio > 0
         ? formatoPrecio.format(precio)
-        : "Consultar precio"
+        : "Consultar precio";
+
+    añadirDato(
+      datos,
+      "Precio de referencia (USD)",
+      precioVisible
     );
 
     let disponibilidad = "Consultar disponibilidad";
@@ -114,20 +120,21 @@ document.addEventListener("DOMContentLoaded", () => {
       typeof producto.cantidad === "number" &&
       Number.isFinite(producto.cantidad)
     ) {
-      disponibilidad = producto.cantidad > 0
-        ? `${formatoNumero.format(producto.cantidad)} unidades registradas`
-        : "Sin existencias registradas";
+      if (producto.cantidad > 0) {
+        const unidad =
+          producto.cantidad === 1
+            ? "unidad registrada"
+            : "unidades registradas";
+
+        disponibilidad =
+          `${formatoNumero.format(producto.cantidad)} ${unidad}`;
+      } else {
+        disponibilidad = "Sin existencias registradas";
+      }
     }
 
     añadirDato(datos, "Disponibilidad", disponibilidad);
 
-    const nota = crearElemento(
-      "p",
-      "nota-producto",
-      "Confirma el precio final, la disponibilidad y la compatibilidad con tu equipo."
-    );
-
-    // Mensaje para WhatsApp.
     const mensaje = [
       "Hola, quisiera consultar por este repuesto de Guanapartes:",
       `Identificador: ${producto.id}`,
@@ -154,11 +161,11 @@ document.addEventListener("DOMContentLoaded", () => {
       `Consultar por WhatsApp sobre ${descripcion}, artículo ${producto.id}`
     );
 
+    // La tarjeta ya no incluye el párrafo de confirmación.
     contenido.append(
       crearElemento("p", "marca-producto", marca),
       titulo,
       datos,
-      nota,
       enlace
     );
 
@@ -173,20 +180,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function actualizarBotones() {
     anterior.disabled =
-      cargando || totalPaginas === 0 || paginaActual <= 1;
+      cargando ||
+      totalPaginas === 0 ||
+      paginaActual <= 1;
 
     siguiente.disabled =
-      cargando || totalPaginas === 0 ||
+      cargando ||
+      totalPaginas === 0 ||
       paginaActual >= totalPaginas;
   }
 
   // ==========================================
-  // CARGAR PRODUCTOS DESDE RAILWAY
+  // CARGAR PRODUCTOS
   // ==========================================
 
   async function cargarProductos(pagina = 1) {
-    // Cancela consultas anteriores.
-    if (controlador) controlador.abort();
+    if (controlador) {
+      controlador.abort();
+    }
 
     controlador = new AbortController();
 
@@ -209,7 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     try {
-      // NUEVO: consulta la API publicada en Railway.
       const respuesta = await fetch(
         `${API_BASE_URL}/api/productos?${parametros}`,
         {
@@ -232,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
       }
 
-      // Ignora respuestas de solicitudes anteriores.
+      // Evita que una respuesta anterior reemplace la actual.
       if (solicitudActual !== numeroSolicitud) return;
 
       paginaActual = datos.pagina;
@@ -278,9 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
       estado.textContent =
         "No se pudo cargar el catálogo. Comprueba tu conexión e inténtalo de nuevo.";
 
-      indicadorPagina.textContent =
-        "Catálogo no disponible";
-
+      indicadorPagina.textContent = "Catálogo no disponible";
       reintentar.hidden = false;
 
       console.error(
@@ -291,21 +299,18 @@ document.addEventListener("DOMContentLoaded", () => {
     } finally {
       if (solicitudActual === numeroSolicitud) {
         cargando = false;
-
         lista.setAttribute("aria-busy", "false");
-
         actualizarBotones();
       }
     }
   }
 
   // ==========================================
-  // CARGAR MARCAS DESDE RAILWAY
+  // CARGAR MARCAS
   // ==========================================
 
   async function cargarMarcas() {
     try {
-      // NUEVO: consulta las marcas desde Railway.
       const respuesta = await fetch(
         `${API_BASE_URL}/api/marcas`,
         {
@@ -351,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // FILTROS DEL CATÁLOGO
+  // FILTROS
   // ==========================================
 
   function aplicarFiltros() {
@@ -376,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================================
-  // BOTONES DE PAGINACIÓN
+  // BOTONES
   // ==========================================
 
   anterior.addEventListener("click", () => {
@@ -396,7 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================================
-  // INICIALIZAR EL CATÁLOGO
+  // INICIO
   // ==========================================
 
   cargarMarcas();
