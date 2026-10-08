@@ -8,7 +8,7 @@
 // Sustituye esta dirección por la URL pública
 // de la NUEVA API publicada en Railway.
 // No agregues /api/productos ni una barra al final.
-const API_BASE_URL = "guanapartes-api-prueba-production-4858.up.railway.app";
+const API_BASE_URL = "https://guanapartes-api-prueba-production-4858.up.railway.app";
 
 document.addEventListener("DOMContentLoaded", () => {
   const lista = document.getElementById("catalogo-lista");
