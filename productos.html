@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Consulta el catálogo de repuestos para maquinaria e implementos agrícolas de Guanapartes."
+  >
+
+  <title>Guanapartes | Productos</title>
+
+  <link rel="stylesheet" href="estilos.css">
+
+  <script src="script.js" defer></script>
+  <script src="productos.js" defer></script>
+</head>
+
+<body>
+
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <!-- ENCABEZADO -->
+  <header>
+    <div class="cabecera contenedor">
+
+      <a class="logo" href="index.html" aria-label="Guanapartes, inicio">
+        <img
+          src="logogua.jpeg"
+          alt="Guanapartes — La solución, a tu alcance"
+        >
+      </a>
+
+      <p class="ubicacion">
+        Repuestos para el trabajo de cada día<br>
+        <strong>Cañas, Guanacaste</strong>
+      </p>
+
+    </div>
+
+    <div class="barra-menu">
+      <nav class="contenedor navegacion" aria-label="Navegación principal">
+
+        <div id="menu" class="enlaces">
+          <a href="index.html">Inicio</a>
+          <a href="productos.html" aria-current="page">Productos</a>
+          <a href="contacto.html">Contacto</a>
+        </div>
+
+        <p class="menu-nota">Consultoría y repuestos</p>
+
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+
+    <!-- PRESENTACIÓN -->
+    <section
+      class="encabezado-productos"
+      aria-labelledby="titulo-productos"
+    >
+      <div class="contenedor">
+
+        <p class="etiqueta">NUESTROS PRODUCTOS</p>
+
+        <h1 id="titulo-productos">
+          Repuestos para tu maquinaria
+        </h1>
+
+        <p class="intro">
+          Encuentra tu repuesto por descripción, número de parte o marca.
+        </p>
+
+        <p class="aviso-catalogo">
+          Catálogo de prueba. Los precios en colones y las existencias
+          son de referencia. Confirma con Guanapartes el precio final,
+          los impuestos y la compatibilidad con tu equipo.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- BUSCADOR Y FILTRO -->
+    <section
+      class="contenedor seccion seleccion-marcas"
+      aria-labelledby="titulo-busqueda"
+    >
+
+      <h2 id="titulo-busqueda">Encuentra el repuesto que necesitas</h2>
+
+      <form id="catalogo-filtros" class="filtros-catalogo" role="search">
+
+        <div class="campo-catalogo">
+          <label for="catalogo-buscar">Descripción o número de parte</label>
+
+          <input
+            type="search"
+            id="catalogo-buscar"
+            name="buscar"
+            placeholder="Ejemplo: faja, rodamiento o 40610"
+            maxlength="150"
+          >
+        </div>
+
+        <div class="campo-catalogo">
+          <label for="catalogo-marca">Marca</label>
+
+          <select id="catalogo-marca" name="marca" disabled>
+            <option value="">Todas las marcas</option>
+          </select>
+        </div>
+
+        <button class="boton" type="submit">Buscar</button>
+
+        <button class="boton" type="button" id="catalogo-limpiar">
+          Limpiar filtros
+        </button>
+
+      </form>
+
+      <p id="catalogo-aviso-marcas" role="status"></p>
+
+    </section>
+
+    <!-- RESULTADOS -->
+    <section
+      class="contenedor seccion grupo-marca"
+      aria-labelledby="titulo-resultados"
+    >
+
+      <div class="encabezado-marca">
+        <p class="etiqueta">CATÁLOGO DE REPUESTOS</p>
+        <h2 id="titulo-resultados">Nuestros productos</h2>
+      </div>
+
+      <p id="catalogo-estado" role="status" aria-live="polite">
+        Cargando productos…
+      </p>
+
+      <button
+        id="catalogo-reintentar"
+        class="boton"
+        type="button"
+        hidden
+      >
+        Reintentar
+      </button>
+
+      <noscript>
+        <p>
+          Activa JavaScript en tu navegador para consultar el catálogo.
+          También puedes llamarnos al 2101-4422.
+        </p>
+      </noscript>
+
+      <!-- JavaScript colocará las tarjetas aquí. -->
+      <div
+        id="catalogo-lista"
+        class="lista-productos"
+        aria-busy="true"
+      ></div>
+
+      <nav class="paginacion-catalogo" aria-label="Páginas del catálogo">
+
+        <button
+          id="catalogo-anterior"
+          class="boton"
+          type="button"
+          disabled
+        >
+          ← Anterior
+        </button>
+
+        <span id="catalogo-pagina">Cargando…</span>
+
+        <button
+          id="catalogo-siguiente"
+          class="boton"
+          type="button"
+          disabled
+        >
+          Siguiente →
+        </button>
+
+      </nav>
+
+    </section>
+
+    <!-- AYUDA -->
+    <section class="ayuda-catalogo" aria-labelledby="titulo-ayuda">
+      <div class="contenedor seccion">
+
+        <h2 id="titulo-ayuda">¿No encuentras tu repuesto?</h2>
+
+        <p>
+          Cuéntanos qué necesitas. Puedes indicarnos la marca,
+          el modelo de tu equipo y el número de parte, si lo conoces.
+        </p>
+
+        <a
+          class="boton"
+          href="https://wa.me/50621014422?text=Hola%2C%20necesito%20ayuda%20para%20encontrar%20un%20repuesto."
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Consultar por WhatsApp
+        </a>
+
+        <a class="enlace" href="tel:+50621014422">
+          Llamar al 2101-4422
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer>
+    <div class="contenedor pie">
+
+      <div class="pie-presentacion">
+        <p class="nombre-pie">GUANAPARTES</p>
+        <p>La solución, a tu alcance.</p>
+
+        <p>
+          Repuestos para maquinaria<br>
+          e implementos agrícolas.
+        </p>
+      </div>
+
+      <nav aria-label="Navegación del pie">
+        <h2>Menú</h2>
+
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li>
+            <a href="productos.html" aria-current="page">Productos</a>
+          </li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <h2>Información</h2>
+
+        <p>Cañas, Guanacaste, Costa Rica.</p>
+        <p>25 metros este del redondel de Cañas</p>
+
+        <h3>Horario de atención</h3>
+
+        <p>
+          <strong>Lunes a viernes:</strong><br>
+          <time datetime="07:00">7:00 a. m.</time>
+          a
+          <time datetime="17:00">5:00 p. m.</time>
+        </p>
+
+        <p>
+          <strong>Sábados:</strong><br>
+          <time datetime="08:00">8:00 a. m.</time>
+          a
+          <time datetime="13:00">1:00 p. m.</time>
+        </p>
+      </div>
+
+      <div>
+        <h2>Contacto</h2>
+
+        <p>
+          <strong>Correo electrónico:</strong><br>
+          <a href="mailto:info@guanapartes.com">
+            info@guanapartes.com
+          </a>
+        </p>
+
+        <p>
+          <strong>Teléfono principal:</strong><br>
+          <a href="tel:+50621014422">2101-4422</a>
+        </p>
+
+        <p>
+          <strong>Teléfono secundario:</strong><br>
+          <a href="tel:+50684479141">8447-9141</a>
+        </p>
+
+        <p>
+          <a
+            href="https://wa.me/50621014422"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Abrir chat de WhatsApp
+          </a>
+        </p>
+
+        <p>
+          <strong>Sitio web:</strong><br>
+          <a href="https://www.guanapartes.com">
+            www.guanapartes.com
+          </a>
+        </p>
+      </div>
+
+    </div>
+
+    <div class="contenedor pie-inferior">
+      <p>© <span id="anio">2026</span> Guanapartes S.A.</p>
+      <p>Confianza · Responsabilidad · Seriedad</p>
+    </div>
+  </footer>
+
+</body>
+</html>
